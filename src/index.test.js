@@ -1,7 +1,7 @@
-import { ExampleComponent } from '.'
+import { DistributionPlotComponent } from '.'
 
 describe('ExampleComponent', () => {
   it('is truthy', () => {
-    expect(ExampleComponent).toBeTruthy()
+    expect(DistributionPlotComponent).toBeTruthy()
   })
 })

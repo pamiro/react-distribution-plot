@@ -15,12 +15,12 @@ npm install --save react-distribution-plot
 ```jsx
 import React, { Component } from 'react'
 
-import MyComponent from 'react-distribution-plot'
+import DistributionPlotComponent from 'react-distribution-plot'
 import 'react-distribution-plot/dist/index.css'
 
 class Example extends Component {
   render() {
-    return <MyComponent />
+    return <DistributionPlotComponent bins={[[0, 1, 1, 0]]} categorical={false} width={800}/>
   }
 }
 ```

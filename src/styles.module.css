@@ -1,9 +1,80 @@
-/* add css module styles here (optional) */
+.container {
+  display: flex;
+  flex-direction: column;
+  padding: 12px;
+  border-radius: 8px;
+  width: 1200px;
+  background: #1A2151;
+}
 
-.test {
-  margin: 2em;
-  padding: 0.5em;
-  border: 2px solid #000;
-  font-size: 2em;
-  text-align: center;
+.label {
+  height: 48px;
+
+  font-family: Open Sans;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 15px;
+  line-height: 130%;
+  /* or 19px */
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  color: #FFFFFF;
+}
+
+.barlabel {
+  font-family: Open Sans;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 13px;
+  line-height: 130%;
+  color: #FFFFFF;
+}
+
+.columnlabel {
+  font-family: Open Sans;
+  font-style: normal;
+  font-weight: bold;
+  font-size: 15px;
+  line-height: 130%;
+  color: #FFFFFF;
+}
+
+.row {
+  height: 48px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+  align-items: center;
+  background: #404973;
+}
+
+.row > div {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.input {
+  min-height: 28px;
+  padding: 0 2px 0 2px;
+  background: #98E1FF;
+  color: #295270;
+  font-family: Open Sans;
+  font-style: normal;
+  font-weight: bold;
+  font-size: 14px;
+  line-height: 100%;
+  border: none;
+  text-align: right;
+  margin: 2px;
+  max-width: 84px;
+}
+
+.button {
+  cursor: pointer;
+  user-select: none;
 }
