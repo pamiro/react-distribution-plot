@@ -116,8 +116,7 @@ export const DistributionPlotComponent = (props) => {
             position: 'absolute',
             width: `${cwidth - 8}px`,
             height: `${cheight}px`,
-            top: '16px',
-            left: '16px'
+            alignSelf: 'start'
           }}
         >
           <svg
