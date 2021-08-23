@@ -7,6 +7,11 @@
   background: #1A2151;
 }
 
+.graph {
+  background: #2380B6;
+  padding: 4px
+}
+
 .label {
   height: 48px;
 
@@ -22,6 +27,11 @@
   align-items: center;
 
   color: #FFFFFF;
+}
+
+.bar {
+  background: #62AFE8;
+  margin: 0 2px 0 2px
 }
 
 .barlabel {

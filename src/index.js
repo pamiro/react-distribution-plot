@@ -3,6 +3,7 @@ import styles from './styles.module.css'
 
 export const DistributionPlotComponent = (props) => {
   // min max weight score
+  const [PMIN, PMAX, PWEIGHT, PSCORE] = [0, 1, 2, 3]
   const [bins, setBins] = useState(
     props.bins ?? [
       [0, 1, 0.3, 50],
@@ -10,21 +11,24 @@ export const DistributionPlotComponent = (props) => {
       [3.33333, 5, 0.2, 900]
     ]
   )
-
+  // Customization
+  const ndigits = props.ndigits ?? 3
   const categorical = props.categorical ?? false
   const cwidth = props.width ?? 1200
   const cheight = props.height ?? 400
+  const labelsheight = props.labelsheight ?? 100
   const nbins = bins.length < 10 ? 10 : bins.length
+  // Internal logic
   const minscore = bins.reduce((accum, bin) => {
-    const score = Number(bin[3])
+    const score = Number(bin[PSCORE])
     if (score < accum) return score
     else return accum
-  }, Number(bins[0][3]))
+  }, Number(bins[0][PSCORE]))
   let maxscore = bins.reduce((accum, bin) => {
-    const score = Number(bin[3])
+    const score = Number(bin[PSCORE])
     if (score > accum) return score
     else return accum
-  }, Number(bins[0][3]))
+  }, Number(bins[0][PSCORE]))
 
   if (maxscore === minscore) maxscore = minscore + 1
 
@@ -36,6 +40,7 @@ export const DistributionPlotComponent = (props) => {
     const regexalpha = new RegExp('^[a-zA-Z0-9]+$')
     const regexnum = new RegExp('^[.0-9]+$')
 
+    // for categorical bins are names of categories so alphabetical are accepted
     if (categorical && field === 0) {
       if (regexalpha.test(value)) {
         bins[idx][field] = value
@@ -79,6 +84,13 @@ export const DistributionPlotComponent = (props) => {
     setBins([...bins])
   }
 
+  const toLabel = (field, p) => {
+    const n = Number(field)
+    const i = Math.trunc(n) // integer part
+    const d = Math.round((n - i) * Math.pow(10, p))
+    return `${i}.${d}`
+  }
+
   return (
     <div className={styles.container} style={{ width: cwidth }}>
       <div
@@ -87,13 +99,12 @@ export const DistributionPlotComponent = (props) => {
           gridTemplateColumns: `repeat(${nbins}, ${Math.round(
             100.0 / nbins
           )}%)`,
-          gridTemplateRows: `${cheight}px 80px`,
+          gridTemplateRows: `${cheight}px ${labelsheight}px`,
           justifyContent: 'stretch',
           alignItems: 'end',
-          padding: '4px',
-          gridColumnGap: '0px',
-          background: '#2380B6'
+          gridColumnGap: '0px'
         }}
+        className={styles.graph}
       >
         {/* bars */}
         {bins.map((bin, idx) => {
@@ -101,11 +112,10 @@ export const DistributionPlotComponent = (props) => {
             <div
               key={idx}
               style={{
-                background: '#62AFE8',
                 gridArea: `1 / ${idx + 1} / 2 / ${idx + 2}`,
-                height: `${Number(bin[2]) * cheight}px`,
-                margin: '0 2px 0 2px'
+                height: `${Number(bin[PWEIGHT]) * cheight}px`
               }}
+              className={styles.bar}
             />
           )
         })}
@@ -129,9 +139,9 @@ export const DistributionPlotComponent = (props) => {
                 return
               }
               const x1 = (idx - 1) * offs + offs / 2
-              const y1 = cheight + 2 - rescaler(bins[idx - 1][3])
+              const y1 = cheight + 2 - rescaler(bins[idx - 1][PSCORE])
               const x2 = idx * offs + offs / 2
-              const y2 = cheight + 2 - rescaler(bin[3])
+              const y2 = cheight + 2 - rescaler(bin[PSCORE])
 
               return (
                 <g key={idx}>
@@ -144,14 +154,16 @@ export const DistributionPlotComponent = (props) => {
                     strokeWidth='4'
                     stroke='#98E1FF'
                   />
-                  <circle cx={x1} cy={y1} r='5' />
+                  <circle cx={x1} cy={y1} r='5' stroke='#98E1FF' fill='black' />
                 </g>
               )
             })}
             <circle
               cx={(bins.length - 1 + 0.5) * ((cwidth - 8) / nbins)}
-              cy={cheight + 2 - rescaler(bins[bins.length - 1][3])}
+              cy={cheight + 2 - rescaler(bins[bins.length - 1][PSCORE])}
               r='5'
+              stroke='#98E1FF'
+              fill='black'
             />
           </svg>
         </div>
@@ -169,13 +181,18 @@ export const DistributionPlotComponent = (props) => {
               }}
             >
               <div
-                className={styles.barlabel}
                 style={{
                   display: 'inline-block',
                   transform: 'translate(0%, 0%) rotate(-90deg)'
                 }}
+                className={styles.barlabel}
               >
-                {categorical ? `${bin[0]}` : `${bin[0]}-${bin[1]}`}
+                {categorical
+                  ? `${bin[PMIN]}`
+                  : `${toLabel(bin[PMIN], ndigits)}-${toLabel(
+                      bin[PMAX],
+                      ndigits
+                    )}`}
               </div>
             </div>
           )
@@ -236,7 +253,7 @@ export const DistributionPlotComponent = (props) => {
             <div style={{ flexBasis: '15%', textAlign: 'center' }}>
               <input
                 className={styles.input}
-                value={bin[0]}
+                value={bin[PMIN]}
                 onChange={(e) => onChangeFiled(e.target.value, idx, 0)}
               />
             </div>
@@ -244,7 +261,7 @@ export const DistributionPlotComponent = (props) => {
               <div style={{ flexBasis: '15%', textAlign: 'center' }}>
                 <input
                   className={styles.input}
-                  value={bin[1]}
+                  value={bin[PMAX]}
                   onChange={(e) => onChangeFiled(e.target.value, idx, 1)}
                 />
               </div>
@@ -252,14 +269,14 @@ export const DistributionPlotComponent = (props) => {
             <div style={{ flexBasis: '15%', textAlign: 'center' }}>
               <input
                 className={styles.input}
-                value={bin[2]}
+                value={bin[PWEIGHT]}
                 onChange={(e) => onChangeFiled(e.target.value, idx, 2)}
               />
             </div>
             <div style={{ flexBasis: '15%', textAlign: 'center' }}>
               <input
                 className={styles.input}
-                value={bin[3]}
+                value={bin[PSCORE]}
                 onChange={(e) => onChangeFiled(e.target.value, idx, 3)}
               />
             </div>
@@ -301,8 +318,8 @@ export const DistributionPlotComponent = (props) => {
               </svg>
             </div>
             <div
-              className={styles.button}
               style={{ flexBasis: '48px', textAlign: 'center' }}
+              className={styles.button}
               onClick={() => onDelete(idx)}
             >
               <svg
