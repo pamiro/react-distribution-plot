@@ -4,15 +4,9 @@ import styles from './styles.module.css'
 export const DistributionPlotComponent = (props) => {
   // min max weight score
   const [PMIN, PMAX, PWEIGHT, PSCORE] = [0, 1, 2, 3]
-  const [bins, setBins] = useState(
-    props.bins ?? [
-      [0, 1, 0.3, 50],
-      [1, 3.333, 0.6, 300],
-      [3.33333, 5, 0.2, 900]
-    ]
-  )
+  const [bins, setBins] = useState(props.bins ?? [[0, 1, 1, 100]])
   useEffect(() => {
-    setBins(props.bins)
+    setBins(props.bins ?? [[0, 1, 1, 100]])
   }, [props.bins])
   // Customization
   const ndigits = props.ndigits ?? 3
