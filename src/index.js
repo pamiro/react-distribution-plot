@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from "react";
 import styles from './styles.module.css'
 
 export const DistributionPlotComponent = (props) => {
@@ -11,6 +11,9 @@ export const DistributionPlotComponent = (props) => {
       [3.33333, 5, 0.2, 900]
     ]
   )
+  useEffect(() => {
+    setBins(props.bins)
+  }, [props.bins])
   // Customization
   const ndigits = props.ndigits ?? 3
   const categorical = props.categorical ?? false
